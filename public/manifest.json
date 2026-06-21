@@ -1,0 +1,21 @@
+{
+  "name": "エニアグラム壁打ち",
+  "short_name": "壁打ち",
+  "description": "対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1F1A24",
+  "theme_color": "#1F1A24",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
