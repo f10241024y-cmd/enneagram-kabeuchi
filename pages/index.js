@@ -263,6 +263,95 @@ function EnneagramDiagram({ type, wing, confidence }) {
   );
 }
 
+function DiagnosisResultCard({ diagnosis, onCopy, onShare, copied }) {
+  if (!diagnosis) return null;
+  const isHigh = diagnosis.confidence === "high";
+  return (
+    <div style={{
+      background: "linear-gradient(135deg, #2A2230 0%, #251F2A 100%)",
+      border: isHigh ? "1.5px solid #D98E4A" : `1px solid rgba(240,233,226,0.12)`,
+      borderRadius: "16px",
+      padding: "20px",
+      maxWidth: "640px",
+      width: "100%",
+    }}>
+      <div style={{
+        fontFamily: "'JetBrains Mono', monospace",
+        fontSize: "10px",
+        letterSpacing: "0.1em",
+        color: isHigh ? "#D98E4A" : "#5B9C92",
+        marginBottom: "12px",
+      }}>
+        {isHigh
+          ? "診断確定"
+          : diagnosis.wing
+          ? "ウイング判別中"
+          : "基本タイプ判別中"}
+      </div>
+
+      <div style={{ display: "flex", alignItems: "baseline", gap: "8px", marginBottom: "6px" }}>
+        <span style={{ fontFamily: "'Fraunces', serif", fontSize: "24px", fontWeight: 600 }}>
+          タイプ{diagnosis.type}
+        </span>
+        <span style={{ fontSize: "14px", color: "#A89A8E" }}>
+          {TYPE_LABELS[diagnosis.type]}
+        </span>
+      </div>
+
+      {(diagnosis.wing || diagnosis.subtype) && (
+        <div style={{ fontSize: "13px", color: "#5B9C92", fontFamily: "'JetBrains Mono', monospace", marginBottom: "8px" }}>
+          {diagnosis.wing ? `ウイング${diagnosis.wing}` : ""}
+          {diagnosis.wing && diagnosis.subtype ? " ・ " : ""}
+          {diagnosis.subtype ? `${SUBTYPE_LABELS[diagnosis.subtype] || diagnosis.subtype}サブタイプ` : ""}
+        </div>
+      )}
+
+      <p style={{ fontSize: "13px", color: "#A89A8E", lineHeight: 1.65, margin: "10px 0 16px" }}>
+        {diagnosis.summary}
+      </p>
+
+      <div style={{ display: "flex", gap: "8px" }}>
+        <button onClick={onCopy} style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px",
+          background: copied ? "#5B9C92" : "transparent",
+          border: copied ? "none" : "1px solid rgba(240,233,226,0.15)",
+          color: copied ? "#1F1A24" : "#F0E9E2",
+          borderRadius: "10px",
+          padding: "12px",
+          fontSize: "14px",
+          fontWeight: 500,
+          cursor: "pointer",
+        }}>
+          {copied ? <Check size={16} /> : <Copy size={16} />}
+          {copied ? "コピーしました" : "結果をコピー"}
+        </button>
+        <button onClick={onShare} style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px",
+          background: "#D98E4A",
+          border: "none",
+          color: "#1F1A24",
+          borderRadius: "10px",
+          padding: "12px",
+          fontSize: "14px",
+          fontWeight: 600,
+          cursor: "pointer",
+        }}>
+          <Send size={16} />
+          LINEに送る
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const [messages, setMessages] = useState([
     { role: "assistant", content: INITIAL_MESSAGE },
@@ -321,15 +410,37 @@ export default function Home() {
     setInput("");
   };
 
+  const buildSummaryText = () => {
+    if (!diagnosis) return "";
+    const parts = [`【エニアグラム壁打ち診断結果】`];
+    parts.push(`タイプ${diagnosis.type}（${TYPE_LABELS[diagnosis.type] || ""}）`);
+    if (diagnosis.wing) parts.push(`ウイング: ${diagnosis.wing}`);
+    if (diagnosis.subtype) parts.push(`サブタイプ: ${SUBTYPE_LABELS[diagnosis.subtype] || diagnosis.subtype}`);
+    parts.push("");
+    parts.push(diagnosis.summary);
+    if (diagnosis.confidence === "high") {
+      parts.push("");
+      parts.push("---");
+      parts.push("診断アプリ: " + (typeof window !== "undefined" ? window.location.origin : ""));
+    }
+    return parts.join("\n");
+  };
+
   const copySummary = () => {
     if (!diagnosis) return;
-    const t = `【壁打ちエニアグラム診断】
-タイプ${diagnosis.type}(${TYPE_LABELS[diagnosis.type] || ""}) / ウイング${diagnosis.wing} / ${SUBTYPE_LABELS[diagnosis.subtype] || diagnosis.subtype}サブタイプ
-
-${diagnosis.summary}`;
-    navigator.clipboard.writeText(t);
+    navigator.clipboard.writeText(buildSummaryText());
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
+  };
+
+  const shareSummary = () => {
+    if (!diagnosis) return;
+    const text = buildSummaryText();
+    if (navigator.share) {
+      navigator.share({ title: "エニアグラム診断結果", text }).catch(() => {});
+    } else {
+      copySummary();
+    }
   };
 
   return (
@@ -435,6 +546,16 @@ ${diagnosis.summary}`;
                   <span style={{ ...appStyles.typingDot, animationDelay: "0.2s" }}>●</span>
                   <span style={{ ...appStyles.typingDot, animationDelay: "0.4s" }}>●</span>
                 </div>
+              </div>
+            )}
+            {diagnosis && !loading && (
+              <div style={{ display: "flex", justifyContent: "flex-start" }}>
+                <DiagnosisResultCard
+                  diagnosis={diagnosis}
+                  onCopy={copySummary}
+                  onShare={shareSummary}
+                  copied={copied}
+                />
               </div>
             )}
           </div>
