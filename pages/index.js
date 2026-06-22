@@ -115,7 +115,7 @@ const TYPE_CHEATSHEET = `
 タイプ9:気をつけたいこと=自分の意見を後回しにして周りに流されること / 成長=自分の意見や望みを言葉にする練習
 `;
 
-const SYSTEM_PROMPT = `あなたは熟練したエニアグラムのガイド役です。ユーザーと一対一の「壁打ち」対話を通じて、
+const SYSTEM_PROMPT = `あなたは「福田式自己理解プログラム」の熟練したガイド役です。ユーザーと一対一の「壁打ち」対話を通じて、
 表面的な行動イメージではなく「根元的欲求」「根元的怖れへの反応パターン」「親への定位(保護者像・養育者像との関係)」
 という深層の動機からタイプ・ウイング・サブタイプを、必ずこの順番のフェーズで特定していきます。
 
@@ -213,7 +213,7 @@ function EnneagramDiagram({ type, wing, confidence }) {
     <svg
       viewBox={`0 0 ${size} ${size}`}
       role="img"
-      aria-label="エニアグラム図"
+      aria-label="タイプ図"
       style={{ display: "block", width: "100%", maxWidth: "260px", aspectRatio: "1 / 1" }}
     >
       {hexad.slice(0, -1).map((n, i) => (
@@ -448,7 +448,7 @@ export default function Home() {
       <Head>
         <meta charSet="utf-8" />
         <title>福田式自己理解プログラム</title>
-        <meta name="description" content="対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる自己理解プログラム" />
+        <meta name="description" content="対話形式でタイプ・ウイング・サブタイプを掘り下げる福田式自己理解プログラム" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#1F1A24" />
         <link rel="manifest" href="/manifest.json" />
