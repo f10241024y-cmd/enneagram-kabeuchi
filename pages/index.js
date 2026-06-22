@@ -412,7 +412,7 @@ export default function Home() {
 
   const buildSummaryText = () => {
     if (!diagnosis) return "";
-    const parts = [`【エニアグラム壁打ち診断結果】`];
+    const parts = [`【福田式自己理解プログラム 診断結果】`];
     parts.push(`タイプ${diagnosis.type}（${TYPE_LABELS[diagnosis.type] || ""}）`);
     if (diagnosis.wing) parts.push(`ウイング: ${diagnosis.wing}`);
     if (diagnosis.subtype) parts.push(`サブタイプ: ${SUBTYPE_LABELS[diagnosis.subtype] || diagnosis.subtype}`);
@@ -437,7 +437,7 @@ export default function Home() {
     if (!diagnosis) return;
     const text = buildSummaryText();
     if (navigator.share) {
-      navigator.share({ title: "エニアグラム診断結果", text }).catch(() => {});
+      navigator.share({ title: "福田式自己理解プログラム 診断結果", text }).catch(() => {});
     } else {
       copySummary();
     }
@@ -447,8 +447,8 @@ export default function Home() {
     <>
       <Head>
         <meta charSet="utf-8" />
-        <title>エニアグラム壁打ち</title>
-        <meta name="description" content="対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる壁打ちアプリ" />
+        <title>福田式自己理解プログラム</title>
+        <meta name="description" content="対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる自己理解プログラム" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
         <meta name="theme-color" content="#1F1A24" />
         <link rel="manifest" href="/manifest.json" />
@@ -472,8 +472,8 @@ export default function Home() {
 
         <aside className="sidebar" style={appStyles.sidebar}>
           <div>
-            <div style={appStyles.eyebrow}>壁打ち式・対話型診断</div>
-            <h1 style={appStyles.title}>エニアグラム<br />壁打ち</h1>
+            <div style={appStyles.eyebrow}>対話型・自己理解プログラム</div>
+            <h1 style={appStyles.title}>福田式<br />自己理解プログラム</h1>
             <p style={appStyles.lead}>
               選択式テストでは届かない、根元的欲求と怖れの反応パターンを対話で掘り下げます。
             </p>
@@ -548,7 +548,7 @@ export default function Home() {
                 </div>
               </div>
             )}
-            {diagnosis && !loading && (
+            {diagnosis && diagnosis.confidence === "high" && !loading && (
               <div style={{ display: "flex", justifyContent: "flex-start" }}>
                 <DiagnosisResultCard
                   diagnosis={diagnosis}

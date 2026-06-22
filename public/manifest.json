@@ -1,7 +1,7 @@
 {
-  "name": "エニアグラム壁打ち",
-  "short_name": "壁打ち",
-  "description": "対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる",
+  "name": "福田式自己理解プログラム",
+  "short_name": "自己理解",
+  "description": "対話形式でエニアグラムのタイプ・ウイング・サブタイプを掘り下げる自己理解プログラム",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1F1A24",
